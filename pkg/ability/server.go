@@ -6,8 +6,6 @@ import (
 	"github.com/gorilla/mux"
 	"io/ioutil"
 	"log"
-	"milobella/oratio/pkg/anima"
-	"milobella/oratio/pkg/cerebro"
 	"net/http"
 )
 
@@ -23,33 +21,32 @@ func NewServer(port int) *Server {
 	return server
 }
 
-
-func (s *Server) RegisterIntent(intent string, process func(nlu cerebro.NLU, nlg *anima.NLG)) (err error) {
+func (s *Server) RegisterIntent(intent string, process func(request Request, response *Response)) (err error) {
 	s.router.HandleFunc("/resolve/" + intent, func(w http.ResponseWriter, r *http.Request) {
-		nlu, err := readNLU(r)
+		abRequest, err := readRequest(r)
 		if err != nil {
 			http.Error(w, err.Error(), 500)
 		}
-		nlg := new(anima.NLG)
-		process(nlu, nlg)
-		writeNLG(w, nlg)
-	}).Methods("GET")
+		abResponse := new(Response)
+		process(abRequest, abResponse)
+		writeResponse(w, abResponse)
+	}).Methods("POST")
 
 	return
 }
 
-func readNLU(r *http.Request) (nlu cerebro.NLU, err error){
+func readRequest(r *http.Request) (request Request, err error){
 	b, err := ioutil.ReadAll(r.Body)
 	defer r.Body.Close()
 	if err != nil {
 		return
 	}
-	err = json.Unmarshal(b, &nlu)
+	err = json.Unmarshal(b, &request)
 	return
 }
 
-func writeNLG(w http.ResponseWriter, nlg *anima.NLG) (err error) {
-	json.NewEncoder(w).Encode(nlg)
+func writeResponse(w http.ResponseWriter, response *Response) (err error) {
+	json.NewEncoder(w).Encode(response)
 	return
 }
 

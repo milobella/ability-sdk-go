@@ -1,7 +1,7 @@
 package ability
 
 import (
-	"milobella/oratio/pkg/anima"
+	"gitlab.milobella.com/milobella/oratio/pkg/anima"
 )
 
 type Response struct {

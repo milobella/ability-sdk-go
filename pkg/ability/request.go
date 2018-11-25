@@ -1,7 +1,7 @@
 package ability
 
 import (
-	"milobella/oratio/pkg/cerebro"
+	"gitlab.milobella.com/milobella/oratio/pkg/cerebro"
 )
 
 type Request struct {

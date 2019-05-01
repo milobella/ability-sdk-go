@@ -48,6 +48,8 @@ func (s *Server) RegisterIntent(intent string, process func(request Request, res
 			http.Error(w, err.Error(), 500)
 		}
 		abResponse := new(Response)
+		// Set the auto reprompt to false by default
+		abResponse.AutoReprompt = false
 		process(abRequest, abResponse)
 		writeResponse(w, abResponse)
 	}).Methods("POST")

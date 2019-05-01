@@ -5,6 +5,5 @@ import (
 )
 
 type Request struct {
-    Nlu             cerebro.NLU     `json:"nlu,omitempty"`,
-    AutoReprompt    bool            `json:"auto_reprompt,omitempty"`
+    Nlu    cerebro.NLU    `json:"nlu,omitempty"`
 }

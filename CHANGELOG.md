@@ -7,10 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ##  [Unreleased]
 N/A
 
+
 ##  [0.2.0]
 ###  Added
+- Added a simple "slot filling" mechanism using the context.
+- Added field ``context`` to the Response and Request objects.
 - Added field ``auto_reprompt`` to the Response object.
- 
+
+###  Changed
+- NLU object is now defined inside the SDK. (no oratio dependencies)
+- NLG object is now defined inside the SDK. (no oratio dependencies)
+
+
 ##  [0.1.0]
 ###  Added
 - Init repository with request and response object

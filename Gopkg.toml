@@ -26,5 +26,5 @@
   version = "1.7.2"
 
 [[constraint]]
-  branch = "master"
-  name = "github.com/juju/loggo"
+  name = "github.com/sirupsen/logrus"
+  version = "v1.4.2"

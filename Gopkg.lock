@@ -8,14 +8,26 @@
   version = "v1.7.2"
 
 [[projects]]
-  branch = "master"
-  name = "github.com/juju/loggo"
+  name = "github.com/konsorten/go-windows-terminal-sequences"
   packages = ["."]
-  revision = "d976af380377adda50b2d34279f1dec3507504ac"
+  revision = "f55edac94c9bbba5d6182a4be46d86a2c9b5b50e"
+  version = "v1.0.2"
+
+[[projects]]
+  name = "github.com/sirupsen/logrus"
+  packages = ["."]
+  revision = "839c75faf7f98a33d445d181f3018b5c3409a45e"
+  version = "v1.4.2"
+
+[[projects]]
+  branch = "master"
+  name = "golang.org/x/sys"
+  packages = ["unix"]
+  revision = "dbbf3f1254d491605cf4a0034ce25d0dc71b0c58"
 
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "064bbb359bf220b617aa20526d8f8aa2fe6bd75d170bf35ba234cbf62686ad3f"
+  inputs-digest = "275760a3ae2b6c56ce422015dbb04a21039aac4476f23668f92bbd30bbc3ffdd"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -3,13 +3,24 @@ package ability
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
+	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net"
 	"net/http"
-
-	"github.com/gorilla/mux"
-	"github.com/juju/loggo"
+	"os"
 )
+
+func init() {
+	logrus.SetFormatter(&logrus.TextFormatter{})
+
+	// Output to stdout instead of the default stderr
+	// Can be any io.Writer, see below for File example
+	logrus.SetOutput(os.Stdout)
+
+	// TODO: read it in the config when move to viper
+	logrus.SetLevel(logrus.DebugLevel)
+}
 
 // Rule : routing rule
 type Rule struct {
@@ -22,7 +33,6 @@ type Server struct {
 	port     int
 	router   *mux.Router
 	listener net.Listener
-	logger   loggo.Logger
 	name     string
 	rules    []Rule
 }
@@ -35,15 +45,11 @@ func NewServer(name string, port int) *Server {
 	server.name = name
 	server.port = port
 
-	// Initialize a logger from the given name, it will be used for all server logs
-	logger := loggo.GetLogger(name)
-	server.logger = logger
-
 	// Initialize the listener
 	addr := fmt.Sprintf(":%d", port)
 	listener, err := net.Listen("tcp", addr)
 	if err != nil {
-		logger.Criticalf("Error initializing the server : %s", err)
+		logrus.Errorf("Error initializing the server : %s", err)
 	}
 	server.listener = listener
 
@@ -113,7 +119,11 @@ func (s *Server) RegisterIntentRule(intent string, process func(*Request, *Respo
 
 // RegisterRule : Create a rule of routing based on condition on request.
 func (s *Server) RegisterRule(condition func(request *Request) (result bool), process func(request *Request, response *Response)) {
-	s.rules = append(s.rules, Rule{condition: condition, process: process})
+	s.rules = append(s.rules, Rule{condition: condition, process: func(request *Request, response *Response) {
+		logrus.Debugf("Received request: %v", request)
+		process(request, response)
+		logrus.Debugf("Sent response : %v", response)
+	} })
 }
 
 func readRequest(r *http.Request) (request *Request, err error) {
@@ -124,18 +134,21 @@ func readRequest(r *http.Request) (request *Request, err error) {
 		return
 	}
 	err = json.Unmarshal(b, request)
+	logrus.Debugf("Received request: %v", request)
 	return
 }
 
 func writeResponse(w http.ResponseWriter, response *Response) (err error) {
+	logrus.Debugf("Sent response : %v", response)
 	err = json.NewEncoder(w).Encode(response)
 	return
 }
+
 
 // Serve : Start the server
 func (s *Server) Serve() {
 	done := make(chan bool)
 	go http.Serve(s.listener, s.router)
-	s.logger.Infof("Successfully started the %s server on port %d !", s.name, s.port)
+	logrus.Infof("Successfully started the %s server on port %d !", s.name, s.port)
 	<-done
 }

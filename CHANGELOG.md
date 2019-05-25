@@ -15,6 +15,7 @@ N/A
 - Added field ``auto_reprompt`` to the Response object.
 
 ###  Changed
+- Use logrus as logging system.
 - NLU object is now defined inside the SDK. (no oratio dependencies)
 - NLG object is now defined inside the SDK. (no oratio dependencies)
 

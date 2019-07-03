@@ -4,6 +4,7 @@ package ability
 type Request struct {
 	Nlu     NLU     `json:"nlu,omitempty"`
 	Context Context `json:"context,omitempty"`
+	Device  Device  `json:"device,omitempty"`
 }
 
 // GetEntitiesByLabel : Extract all entities which have the given label.

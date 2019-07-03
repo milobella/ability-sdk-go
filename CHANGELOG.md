@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added field ``auto_reprompt`` to the Response object.
 
 ###  Changed
+- Use logrus as logging system.
 - NLU object is now defined inside the SDK. (no oratio dependencies)
 - NLG object is now defined inside the SDK. (no oratio dependencies)
 

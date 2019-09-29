@@ -9,6 +9,8 @@ import (
 	"net"
 	"net/http"
 	"os"
+
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func init() {
@@ -54,6 +56,7 @@ func NewServer(name string, port int) *Server {
 	server.listener = listener
 
 	server.router.HandleFunc("/resolve", server.handleResolve).Methods("POST")
+	server.router.Handle("/metrics", promhttp.Handler())
 	return server
 }
 

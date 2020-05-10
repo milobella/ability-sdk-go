@@ -1,6 +1,6 @@
-module milobella.com/gitlab/milobella/ability-sdk-go
+module github.com/milobella/ability-sdk-go
 
-go 1.13
+go 1.14
 
 require (
 	github.com/gorilla/mux v1.7.3

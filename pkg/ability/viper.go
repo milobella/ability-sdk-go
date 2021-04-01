@@ -2,10 +2,22 @@ package ability
 
 import (
 	"github.com/iamolegga/enviper"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
-func ReadConfiguration() (*Configuration, error) {
+func ReadConfiguration() *Configuration {
+	conf, err := readConfiguration()
+	if err != nil { // Handle errors reading the config file
+		logrus.WithError(err).Fatalf("Error reading config.")
+	} else {
+		logrus.Infof("The configuration has been successfully ridden.")
+		logrus.Debugf("-> %+v", conf)
+	}
+	return conf
+}
+
+func readConfiguration() (*Configuration, error) {
 	e := enviper.New(viper.New())
 	e.SetEnvPrefix("ABILITY")
 

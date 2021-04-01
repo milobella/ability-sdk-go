@@ -1,4 +1,4 @@
-package model
+package ability
 
 type NLG struct {
 	Sentence string     `json:"sentence,omitempty"`

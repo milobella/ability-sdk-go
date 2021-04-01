@@ -1,4 +1,4 @@
-package model
+package ability
 
 // Device information
 type Device struct {

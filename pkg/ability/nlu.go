@@ -1,4 +1,4 @@
-package model
+package ability
 
 // NLU nlu
 type NLU struct {

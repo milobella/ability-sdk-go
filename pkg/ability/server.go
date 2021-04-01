@@ -1,9 +1,8 @@
-package pkg
+package ability
 
 import (
 	"fmt"
 	"github.com/milobella/ability-sdk-go/internal/logging"
-	"github.com/milobella/ability-sdk-go/pkg/model"
 	"github.com/sirupsen/logrus"
 	"net/http"
 	"os"
@@ -28,8 +27,8 @@ func init() {
 
 // Rule : routing rule
 type Rule struct {
-	condition func(request *model.Request) (result bool)
-	process   func(request *model.Request, response *model.Response)
+	condition func(request *Request) (result bool)
+	process   func(request *Request, response *Response)
 }
 
 // Server : server
@@ -61,18 +60,18 @@ func NewServer(name string, port int) *Server {
 }
 
 func (s *Server) handleResolve(c echo.Context) (err error) {
-	request := new(model.Request)
+	request := new(Request)
 	if err = c.Bind(request); err != nil {
 		return
 	}
 
-	response := new(model.Response)
+	response := new(Response)
 	s.processRules(request, response)
 
 	return c.JSON(http.StatusOK, response)
 }
 
-func (s *Server) processRules(request *model.Request, response *model.Response) {
+func (s *Server) processRules(request *Request, response *Response) {
 	// Set the auto reprompt to false by default
 	response.AutoReprompt = false
 
@@ -92,13 +91,13 @@ func (s *Server) processRules(request *model.Request, response *model.Response) 
 // giving the intent as string and a function handler which takes a request and a response.
 //
 // Deprecated: Use RegisterIntentRule instead.
-func (s *Server) RegisterIntent(intent string, process func(request model.Request, response *model.Response)) error {
+func (s *Server) RegisterIntent(intent string, process func(request Request, response *Response)) error {
 	s.e.POST("/resolve/"+intent, func(c echo.Context) (err error) {
-		abRequest := new(model.Request)
+		abRequest := new(Request)
 		if err = c.Bind(abRequest); err != nil {
 			return
 		}
-		abResponse := new(model.Response)
+		abResponse := new(Response)
 		// Set the auto reprompt to false by default
 		abResponse.AutoReprompt = false
 
@@ -111,15 +110,15 @@ func (s *Server) RegisterIntent(intent string, process func(request model.Reques
 }
 
 // RegisterIntentRule : Create a rule of routing based on intent.
-func (s *Server) RegisterIntentRule(intent string, process func(*model.Request, *model.Response)) {
-	s.RegisterRule(func(request *model.Request) (result bool) {
+func (s *Server) RegisterIntentRule(intent string, process func(*Request, *Response)) {
+	s.RegisterRule(func(request *Request) (result bool) {
 		return request.Nlu.BestIntent == intent
 	}, process)
 }
 
 // RegisterRule : Create a rule of routing based on condition on request.
-func (s *Server) RegisterRule(condition func(request *model.Request) (result bool), process func(request *model.Request, response *model.Response)) {
-	s.rules = append(s.rules, Rule{condition: condition, process: func(request *model.Request, response *model.Response) {
+func (s *Server) RegisterRule(condition func(request *Request) (result bool), process func(request *Request, response *Response)) {
+	s.rules = append(s.rules, Rule{condition: condition, process: func(request *Request, response *Response) {
 		logrus.Debugf("Received request: %v", request)
 		process(request, response)
 		logrus.Debugf("Sent response : %v", response)

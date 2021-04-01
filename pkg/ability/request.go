@@ -1,4 +1,4 @@
-package model
+package ability
 
 // Request in the format in which we receive it.
 type Request struct {

@@ -1,4 +1,4 @@
-package model
+package ability
 
 // Context that will be sent back to us in the next request
 type Context struct {

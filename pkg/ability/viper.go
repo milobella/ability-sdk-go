@@ -1,4 +1,4 @@
-package config
+package ability
 
 import (
 	"github.com/iamolegga/enviper"

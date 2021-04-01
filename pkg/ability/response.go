@@ -1,4 +1,4 @@
-package model
+package ability
 
 type Response struct {
 	Nlg          NLG         `json:"nlg,omitempty"`

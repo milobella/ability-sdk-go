@@ -2,44 +2,34 @@ package ability
 
 import (
 	"fmt"
-	"github.com/milobella/ability-sdk-go/internal/logging"
-	"github.com/sirupsen/logrus"
 	"net/http"
 	"os"
+
+	"github.com/milobella/ability-sdk-go/internal/logging"
+	"github.com/sirupsen/logrus"
 
 	"github.com/labstack/echo"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 func init() {
-	// Log as JSON instead of the default ASCII formatter.
 	logrus.SetFormatter(&logrus.TextFormatter{})
-
-	// Output to stdout instead of the default stderr
-	// Can be any io.Writer, see below for File example
 	logrus.SetOutput(os.Stdout)
-
-	// TODO: read it in the config when move to viper
-	logrus.SetLevel(logrus.DebugLevel)
-
 	logrus.SetReportCaller(true)
 }
 
-// Rule : routing rule
-type Rule struct {
+type RoutingRule struct {
 	condition func(request *Request) (result bool)
 	process   func(request *Request, response *Response)
 }
 
-// Server : server
 type Server struct {
 	port  int
 	name  string
-	rules []Rule
+	rules []RoutingRule
 	e     *echo.Echo
 }
 
-// NewServer ctor
 func NewServer(name string, port int) *Server {
 	// Initialize an echo server
 	e := echo.New()
@@ -83,42 +73,21 @@ func (s *Server) processRules(request *Request, response *Response) {
 		}
 	}
 
+	logrus.WithField("request", request).Error("Didn't find any rule matching the request")
 	response.Nlg.Sentence = "Error processing the request given to the ability."
 	return
 }
 
-// RegisterIntent : Ability servers are done to handle some intents. We can simply register one using this method,
-// giving the intent as string and a function handler which takes a request and a response.
-//
-// Deprecated: Use RegisterIntentRule instead.
-func (s *Server) RegisterIntent(intent string, process func(request Request, response *Response)) error {
-	s.e.POST("/resolve/"+intent, func(c echo.Context) (err error) {
-		abRequest := new(Request)
-		if err = c.Bind(abRequest); err != nil {
-			return
-		}
-		abResponse := new(Response)
-		// Set the auto reprompt to false by default
-		abResponse.AutoReprompt = false
-
-		process(*abRequest, abResponse)
-
-		return c.JSON(http.StatusOK, abResponse)
-	})
-
-	return nil
-}
-
-// RegisterIntentRule : Create a rule of routing based on intent.
+// RegisterIntentRule : Create a routing rule based on intent.
 func (s *Server) RegisterIntentRule(intent string, process func(*Request, *Response)) {
 	s.RegisterRule(func(request *Request) (result bool) {
 		return request.Nlu.BestIntent == intent
 	}, process)
 }
 
-// RegisterRule : Create a rule of routing based on condition on request.
+// RegisterRule : Create a routing rule based on condition on request.
 func (s *Server) RegisterRule(condition func(request *Request) (result bool), process func(request *Request, response *Response)) {
-	s.rules = append(s.rules, Rule{condition: condition, process: func(request *Request, response *Response) {
+	s.rules = append(s.rules, RoutingRule{condition: condition, process: func(request *Request, response *Response) {
 		logrus.Debugf("Received request: %v", request)
 		process(request, response)
 		logrus.Debugf("Sent response : %v", response)

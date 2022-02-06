@@ -2,10 +2,10 @@ package ability
 
 import (
 	"encoding/json"
+
 	"github.com/sirupsen/logrus"
 )
 
-// Configuration
 type Configuration struct {
 	Server ServerConfiguration          `mapstructure:"server"`
 	Tools  map[string]ToolConfiguration `mapstructure:"tools"`
@@ -21,8 +21,8 @@ func (c Configuration) String() string {
 }
 
 type ServerConfiguration struct {
-	Port     int    `mapstructure:"port"`
-	LogLevel string `mapstructure:"log_level"`
+	Port     int          `mapstructure:"port"`
+	LogLevel logrus.Level `mapstructure:"log_level"`
 }
 
 type ToolConfiguration struct {

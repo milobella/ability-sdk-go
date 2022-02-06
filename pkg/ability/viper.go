@@ -1,39 +1,42 @@
 package ability
 
 import (
+	"fmt"
+	"strings"
+
 	"github.com/iamolegga/enviper"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
-func ReadConfiguration() *Configuration {
-	conf, err := readConfiguration()
-	if err != nil { // Handle errors reading the config file
-		logrus.WithError(err).Fatalf("Error reading config.")
-	} else {
-		logrus.Infof("The configuration has been successfully ridden.")
-		logrus.Debugf("-> %+v", conf)
-	}
-	return conf
-}
+const configName = "ability"
 
-func readConfiguration() (*Configuration, error) {
+func ReadConfiguration() *Configuration {
 	e := enviper.New(viper.New())
-	e.SetEnvPrefix("ABILITY")
+	e.SetEnvPrefix(strings.ToUpper(configName))
 
 	e.SetConfigName("config")
 	e.SetConfigType("toml")
-	e.AddConfigPath("/etc/ability/")
-	e.AddConfigPath("$HOME/.ability")
+	e.AddConfigPath(fmt.Sprintf("/etc/%s/", configName))
+	e.AddConfigPath(fmt.Sprintf("$HOME/.%s", configName))
 	e.AddConfigPath(".")
-	if err := e.ReadInConfig(); err != nil {
-		return nil, err
+	err := e.ReadInConfig()
+	if err != nil {
+		fatal(err)
 	}
 
-	var C Configuration
-	//_ = e.Unmarshal(&C)
-	if err := e.Unmarshal(&C); err != nil {
-		return nil, err
+	var config Configuration
+	if err = e.Unmarshal(&config); err != nil {
+		fatal(err)
+	} else {
+		logrus.Info("Successfully red configuration !")
+		logrus.Debugf("-> %+v", config)
 	}
-	return &C, nil
+
+	logrus.SetLevel(config.Server.LogLevel)
+	return &config
+}
+
+func fatal(err error) {
+	logrus.WithError(err).Fatal("Error reading config.")
 }

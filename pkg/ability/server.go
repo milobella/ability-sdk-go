@@ -5,11 +5,10 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/labstack/echo/v4"
 	"github.com/milobella/ability-sdk-go/internal/logging"
-	"github.com/sirupsen/logrus"
-
-	"github.com/labstack/echo"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
+	"github.com/sirupsen/logrus"
 )
 
 func init() {
@@ -39,7 +38,7 @@ func NewServer(name string, port int) *Server {
 	server.e = e
 
 	// Register logging middleware
-	e.Use(logging.InitializeLoggingMiddleware().Handle)
+	logging.ApplyMiddleware(e)
 	// Register route for metrics
 	e.GET("/metrics", echo.WrapHandler(promhttp.Handler()))
 

@@ -33,8 +33,17 @@ func (req *Request) IsInSlotFillingAction(action string) bool {
 //    User: "I want the bedroom" / "bedroom of the parents" > nok
 func (req *Request) InterpretInstrumentFromNLU(kind InstrumentKind) *Instrument {
 	for _, instrument := range req.Device.Instruments {
-		if instrument.Kind == kind && utils.StringFuzzyMatch(instrument.Name, req.Nlu.Text) {
-			return &instrument
+		if instrument.Kind == kind {
+			// Search instrument in entities
+			entity := req.Nlu.GetFirstEntityOf("instrument")
+			if entity != nil && utils.StringFuzzyMatch(instrument.Name, entity.Text) {
+				return &instrument
+			}
+
+			// Search instrument directly in the text
+			if utils.StringFuzzyMatch(instrument.Name, req.Nlu.Text) {
+				return &instrument
+			}
 		}
 	}
 	return nil
@@ -45,6 +54,15 @@ type NLU struct {
 	Intents    []Intent
 	Entities   []Entity
 	Text       string
+}
+
+func (nlu *NLU) GetFirstEntityOf(label string) *Entity {
+	for _, ent := range nlu.Entities {
+		if ent.Label == label {
+			return &ent
+		}
+	}
+	return nil
 }
 
 type Intent struct {

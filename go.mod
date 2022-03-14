@@ -4,7 +4,7 @@ go 1.17
 
 require (
 	github.com/iamolegga/enviper v1.4.0
-	github.com/labstack/echo/v4 v4.7.0
+	github.com/labstack/echo/v4 v4.7.1
 	github.com/milobella/oratio v1.4.3
 	github.com/prometheus/client_golang v1.12.1
 	github.com/sirupsen/logrus v1.8.1

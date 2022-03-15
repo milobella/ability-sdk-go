@@ -11,7 +11,7 @@ import (
 
 const configName = "ability"
 
-func ReadConfiguration() *Configuration {
+func ReadConfiguration(extensions ...interface{}) *Configuration {
 	e := enviper.New(viper.New())
 	e.SetEnvPrefix(strings.ToUpper(configName))
 
@@ -31,6 +31,12 @@ func ReadConfiguration() *Configuration {
 	} else {
 		logrus.Info("Successfully red configuration !")
 		logrus.Debugf("-> %+v", config)
+	}
+
+	for _, ext := range extensions {
+		if err = e.Unmarshal(ext); err != nil {
+			fatal(err)
+		}
 	}
 
 	logrus.SetLevel(config.Server.LogLevel)

@@ -11,7 +11,15 @@ import (
 
 const configName = "ability"
 
+// ReadConfiguration
+// Deprecated: use ReadConfig instead, which allows to specify a richer configuration.
 func ReadConfiguration() *Configuration {
+	var config Configuration
+	ReadConfig(&config)
+	return &config
+}
+
+func ReadConfig(config *Configuration) {
 	e := enviper.New(viper.New())
 	e.SetEnvPrefix(strings.ToUpper(configName))
 
@@ -25,7 +33,6 @@ func ReadConfiguration() *Configuration {
 		fatal(err)
 	}
 
-	var config Configuration
 	if err = e.Unmarshal(&config); err != nil {
 		fatal(err)
 	} else {
@@ -34,7 +41,6 @@ func ReadConfiguration() *Configuration {
 	}
 
 	logrus.SetLevel(config.Server.LogLevel)
-	return &config
 }
 
 func fatal(err error) {

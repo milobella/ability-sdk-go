@@ -1,4 +1,4 @@
-package ability
+package config
 
 import (
 	"fmt"
@@ -9,9 +9,9 @@ import (
 	"github.com/spf13/viper"
 )
 
-const configName = "ability"
+const configName = "server"
 
-func ReadConfiguration(extensions ...interface{}) *Configuration {
+func Read(extensions ...interface{}) *Config {
 	e := enviper.New(viper.New())
 	e.SetEnvPrefix(strings.ToUpper(configName))
 
@@ -25,7 +25,7 @@ func ReadConfiguration(extensions ...interface{}) *Configuration {
 		fatal(err)
 	}
 
-	var config Configuration
+	var config Config
 	if err = e.Unmarshal(&config); err != nil {
 		fatal(err)
 	} else {

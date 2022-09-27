@@ -1,4 +1,4 @@
-package server
+package conditions
 
 import "github.com/milobella/ability-sdk-go/pkg/model"
 

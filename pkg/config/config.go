@@ -21,8 +21,8 @@ func (c Config) String() string {
 }
 
 type Server struct {
-	Port     int          `mapstructure:"port"`
-	LogLevel logrus.Level `mapstructure:"log_level"`
+	Port     int    `mapstructure:"port"`
+	LogLevel string `mapstructure:"log_level"`
 }
 
 type Tool struct {

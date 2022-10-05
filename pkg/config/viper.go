@@ -9,7 +9,7 @@ import (
 	"github.com/spf13/viper"
 )
 
-const configName = "server"
+const configName = "ability"
 
 func Read(extensions ...interface{}) *Config {
 	e := enviper.New(viper.New())
@@ -39,7 +39,15 @@ func Read(extensions ...interface{}) *Config {
 		}
 	}
 
-	logrus.SetLevel(config.Server.LogLevel)
+	var level logrus.Level
+	level, err = logrus.ParseLevel(config.Server.LogLevel)
+	if err != nil {
+		logrus.SetLevel(logrus.InfoLevel)
+		logrus.WithError(err).Errorf("Error occured while parsing log level. Default to INFO")
+	} else {
+		logrus.SetLevel(level)
+	}
+
 	return &config
 }
 

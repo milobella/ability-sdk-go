@@ -69,7 +69,7 @@ func (d *Device) CanDo(kind InstrumentKind, action string) (result []Instrument)
 
 // Context that will be sent back to us in the next request
 type Context struct {
-	SlotFilling SlotFilling `json:"slot_filling,omitempty"`
+	SlotFilling *SlotFilling `json:"slot_filling,omitempty"`
 }
 
 // SlotFilling state

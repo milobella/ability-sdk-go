@@ -22,24 +22,31 @@ func (req *Request) GetEntitiesByLabel(label string) (items []string) {
 }
 
 func (req *Request) IsInSlotFillingAction(action string, withAnyOfTheseMissingSlots ...string) bool {
-	result := req.Context.SlotFilling.Action == action
-	if !result {
-		return result
+	if req.Context.SlotFilling == nil {
+		return false
 	}
+	isInSlotFillingAction := req.Context.SlotFilling.Action == action
+	if !isInSlotFillingAction {
+		return false
+	}
+	oneOfTheSlotIsMissing := false
 	for _, slot := range withAnyOfTheseMissingSlots {
-		result = result || utils.StringSliceContains(req.Context.SlotFilling.MissingSlots, slot)
+		oneOfTheSlotIsMissing = oneOfTheSlotIsMissing || utils.StringSliceContains(req.Context.SlotFilling.MissingSlots, slot)
 	}
-	return result
+	return isInSlotFillingAction && (len(withAnyOfTheseMissingSlots) == 0 || oneOfTheSlotIsMissing)
 }
 
 // InterpretInstrumentFromNLU Search in the device's instruments the one matching the NLU of the request
-//  Working examples :
-//    The user has following instruments of a kind : "living room", "parents' bedroom".
-//    User: "I want the living room" / "living room" / "bedroom" > ok
+//
+//	Working examples :
+//	  The user has following instruments of a kind : "living room", "parents' bedroom".
+//	  User: "I want the living room" / "living room" / "bedroom" > ok
+//
 // TODO: This algorithm should be improved as it is too naïve.
-//  Non working example :
-//    The user has following instruments of a kind : "living room", "parents' bedroom".
-//    User: "I want the bedroom" / "bedroom of the parents" > nok
+//
+//	Non working example :
+//	  The user has following instruments of a kind : "living room", "parents' bedroom".
+//	  User: "I want the bedroom" / "bedroom of the parents" > nok
 func (req *Request) InterpretInstrumentFromNLU(kind InstrumentKind, action string) *Instrument {
 	for _, instrument := range req.Device.Instruments {
 		// Verify that the instrument correspond to the predicates

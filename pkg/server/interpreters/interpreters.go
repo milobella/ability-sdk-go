@@ -22,7 +22,8 @@ func FromInstrument(kind model.InstrumentKind, action string) *InstrumentInterpr
 // Interpret get the name of the device's instrument that corresponds to the given parameters.
 // If it doesn't find any instrument matching, it will return a pre-computed response with an error message.
 // If it finds several instruments matching, it will even return a reprompt answer,
-//   but only if the instrument can't be found in the NLU and if the previous response was not already a reprompt. (Prevent from infinite loop)
+//
+//	but only if the instrument can't be found in the NLU and if the previous response was not already a reprompt. (Prevent from infinite loop)
 func (i *InstrumentInterpreter) Interpret(req *model.Request) (*string, func(response *model.Response)) {
 	instruments := req.Device.CanDo(i.kind, i.action)
 
@@ -59,8 +60,11 @@ func (i *InstrumentInterpreter) Interpret(req *model.Request) (*string, func(res
 				Value: instrumentsNames,
 				Type:  "enumerated_list",
 			}}
-			resp.Context.SlotFilling.Action = i.action
-			resp.Context.SlotFilling.MissingSlots = []string{instrumentSlot}
+			resp.Context.SlotFilling = &model.SlotFilling{
+				Action:       i.action,
+				MissingSlots: []string{instrumentSlot},
+				FilledSlots:  nil,
+			}
 			resp.AutoReprompt = true
 		}
 	}
@@ -110,8 +114,11 @@ func (i *NLUInterpreter) InterpretAll(req *model.Request) ([]string, func(respon
 		// No entity found, we return an error.
 		return nil, func(resp *model.Response) {
 			resp.Nlg = i.notFoundMsg
-			resp.Context.SlotFilling.Action = i.action
-			resp.Context.SlotFilling.MissingSlots = []string{i.entity}
+			resp.Context.SlotFilling = &model.SlotFilling{
+				Action:       i.action,
+				MissingSlots: []string{i.entity},
+				FilledSlots:  nil,
+			}
 			resp.AutoReprompt = true
 		}
 	}

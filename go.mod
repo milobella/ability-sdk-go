@@ -5,7 +5,7 @@ go 1.19
 require (
 	github.com/iamolegga/enviper v1.4.0
 	github.com/labstack/echo/v4 v4.9.0
-	github.com/milobella/oratio v1.4.4
+	github.com/milobella/oratio v1.4.5
 	github.com/prometheus/client_golang v1.13.0
 	github.com/sirupsen/logrus v1.9.0
 	github.com/spf13/viper v1.13.0

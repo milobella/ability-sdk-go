@@ -244,6 +244,8 @@ github.com/milobella/oratio v1.4.4 h1:HTumC1SLAU1+mqkKJKyfXFMLlTvlaBLAJApOcz9RPK
 github.com/milobella/oratio v1.4.4/go.mod h1:moqotaPFw3+wbMY3Rj50+uthSKXQSZuJMns1ynlYgq4=
 github.com/milobella/oratio v1.4.5 h1:YEDdNfHFPJAPThnDUdLjBjuyjiw05HfbvXDeJrJt9dQ=
 github.com/milobella/oratio v1.4.5/go.mod h1:g8eU3WNDMN74LN5GgmYuNTSH95yh9CUJdEQkfZyDbEI=
+github.com/milobella/oratio v1.4.7 h1:772hn8TI59i5vyF1HRrDMscGSycd4v7eslm4YrB65gw=
+github.com/milobella/oratio v1.4.7/go.mod h1:VgdmAQwlp7ONOegXYwTaF385HFK7w2FrCxWiCBuvNHQ=
 github.com/mitchellh/cli v1.0.0/go.mod h1:hNIlj7HEI86fIcpObd7a0FcrxTWetlwJDGcceTlRvqc=
 github.com/mitchellh/go-homedir v1.0.0/go.mod h1:SfyaCUpYCn1Vlf4IUYiD9fPX4A5wJrkLzIz1N1q0pr0=
 github.com/mitchellh/go-testing-interface v1.0.0/go.mod h1:kRemZodwjscx+RGhAo8eIhFbs2+BFgRtFPeD/KE+zxI=
@@ -536,6 +538,8 @@ golang.org/x/sys v0.0.0-20220114195835-da31bd327af9/go.mod h1:oPkhp1MJrh7nUepCBc
 golang.org/x/sys v0.0.0-20220412211240-33da011f77ad/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8 h1:0A+M6Uqn+Eje4kHMK80dtF3JCXC4ykBgQG4Fe06QRhQ=
 golang.org/x/sys v0.0.0-20220715151400-c0bba94af5f8/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
+golang.org/x/sys v0.0.0-20220919091848-fb04ddd9f9c8 h1:h+EGohizhe9XlX18rfpa8k8RAc5XyaeamM+0VHRd4lc=
+golang.org/x/sys v0.0.0-20220919091848-fb04ddd9f9c8/go.mod h1:oPkhp1MJrh7nUepCBck5+mAzfO9JrbApNNgaTdGDITg=
 golang.org/x/term v0.0.0-20201126162022-7de9c90e9dd1/go.mod h1:bj7SfCRtBDWHUb9snDiAeCFNEtKQo2Wmx5Cou7ajbmo=
 golang.org/x/term v0.0.0-20210927222741-03fcf44c2211/go.mod h1:jbD1KX2456YbFQfuXm/mYQcufACuNUgVhRMnK/tPxf8=
 golang.org/x/text v0.0.0-20170915032832-14c0d48ead0c/go.mod h1:NqM8EUOU14njkJ3fqMW+pc6Ldnwhi/IjpwHt7yyuwOQ=

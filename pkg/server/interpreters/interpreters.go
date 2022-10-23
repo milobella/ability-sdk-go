@@ -8,15 +8,23 @@ const instrumentSlot = "instrument_name"
 const instrumentNotFound = "I didn't find any instrument in the device matching your request."
 
 type InstrumentInterpreter struct {
-	kind   model.InstrumentKind
-	action string
+	kind       model.InstrumentKind
+	action     string
+	predicates []InstrumentPredicate
 }
+
+type InstrumentPredicate func(instrument model.Instrument) bool
 
 func FromInstrument(kind model.InstrumentKind, action string) *InstrumentInterpreter {
 	return &InstrumentInterpreter{
 		kind:   kind,
 		action: action,
 	}
+}
+
+func (i *InstrumentInterpreter) WithPredicate(predicate InstrumentPredicate) *InstrumentInterpreter {
+	i.predicates = append(i.predicates, predicate)
+	return i
 }
 
 // Interpret get the name of the device's instrument that corresponds to the given parameters.
@@ -26,6 +34,7 @@ func FromInstrument(kind model.InstrumentKind, action string) *InstrumentInterpr
 //	but only if the instrument can't be found in the NLU and if the previous response was not already a reprompt. (Prevent from infinite loop)
 func (i *InstrumentInterpreter) Interpret(req *model.Request) (*string, func(response *model.Response)) {
 	instruments := req.Device.CanDo(i.kind, i.action)
+	instruments = i.filterPredicates(instruments)
 
 	if len(instruments) == 0 {
 		// No instrument found, we return an error.
@@ -70,6 +79,23 @@ func (i *InstrumentInterpreter) Interpret(req *model.Request) (*string, func(res
 	}
 
 	return &instruments[0].Name, nil
+}
+
+func (i *InstrumentInterpreter) filterPredicates(instruments []model.Instrument) []model.Instrument {
+	result := instruments[:0]
+	for _, instrument := range instruments {
+		fulfilled := true
+		for _, predicate := range i.predicates {
+			if !predicate(instrument) {
+				fulfilled = false
+				break
+			}
+		}
+		if fulfilled {
+			result = append(result, instrument)
+		}
+	}
+	return result
 }
 
 type NLUInterpreter struct {

@@ -43,12 +43,22 @@ type InstrumentKind string
 
 const (
 	InstrumentKindChromeCast InstrumentKind = "chromecast"
+	InstrumentStateUnknown                  = "UNKNOWN"
 )
+
+type InstrumentState struct {
+	Status string
+}
 
 type Instrument struct {
 	Kind    InstrumentKind
 	Actions []string
 	Name    string
+	State   InstrumentState
+}
+
+func (i *Instrument) IsActive() bool {
+	return len(i.State.Status) > 0 && i.State.Status != InstrumentStateUnknown
 }
 
 // Device information
